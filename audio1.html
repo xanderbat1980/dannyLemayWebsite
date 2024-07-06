@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page d'Alerte Artistique</title>
+    <style>
+        /* Import des polices Google */
+        @import url("https://fonts.googleapis.com/css2?family=DM+Sans&family=Poppins&family=Roboto&display=swap");
+
+        /* Style global du body */
+        body {
+            font-family: 'Roboto', Arial, sans-serif; /* Police du texte */
+            margin: 0; /* Supprimer les marges */
+            padding: 0; /* Supprimer les padding */
+            background-color: #f0f0f0; /* Couleur de fond */
+            display: flex; /* Utiliser flexbox pour l'alignement */
+            flex-direction: column; /* Alignement des éléments en colonne */
+            align-items: center; /* Aligner les éléments au centre horizontalement */
+            justify-content: flex-start; /* Commencer les éléments en haut */
+            height: 100vh; /* Hauteur de la vue */
+            perspective: 1000px; /* Perspective 3D pour les animations */
+        }
+
+        /* Style de la barre de menu */
+        header {
+            width: 100%; /* Occuper toute la largeur */
+            background-color: #1e1e1e; /* Couleur de fond */
+            color: white; /* Couleur du texte */
+            padding: 4.5em 1em; /* Augmenter le padding pour agrandir la barre */
+            position: absolute; /* Positionnement fixe en haut */
+            top: 0; /* Aligné en haut */
+            z-index: 100; /* Toujours devant les autres éléments */
+            display: flex; /* Utiliser flexbox */
+            align-items: center; /* Centrer verticalement */
+            justify-content: space-between; /* Espace entre les éléments */
+        }
+
+        /* Style des images dans la barre de menu */
+        header img {
+            height: 120px; /* Augmenter la hauteur des images */
+            margin: 0 40px; /* Éloigner davantage les images des bords */
+        }
+
+        /* Style des listes de navigation */
+        nav ul {
+            list-style-type: none; /* Supprimer les puces des listes */
+            padding: 0; /* Supprimer les padding */
+            margin: 0; /* Supprimer les marges */
+            display: flex; /* Utiliser flexbox */
+            justify-content: center; /* Centrer les éléments */
+            gap: 1em; /* Espacement entre les éléments */
+            flex-grow: 1; /* Prendre toute la place possible */
+        }
+
+        /* Style des éléments de la liste de navigation */
+        nav ul li {
+            display: inline; /* Afficher les éléments en ligne */
+        }
+
+        /* Style des liens de navigation */
+        nav ul li a {
+            color: white; /* Couleur des liens */
+            text-decoration: none; /* Supprimer la décoration des liens */
+            font-size: 1.2em; /* Taille de police des liens */
+            transition: color 0.3s; /* Transition pour le changement de couleur */
+        }
+
+        /* Changement de couleur au survol */
+        nav ul li a:hover {
+            color: #f15bb5; /* Couleur des liens au survol */
+        }
+
+        /* Style du bouton de création de profil */
+        #create-profile {
+            background-color: #f15bb5; /* Couleur de fond */
+            border-radius: 25px; /* Bords arrondis */
+            padding: 0.5em 1em; /* Padding interne */
+            color: white; /* Couleur du texte */
+            text-decoration: none; /* Supprimer la décoration du lien */
+            font-size: 1.2em; /* Taille de police */
+            display: flex; /* Utiliser flexbox */
+            align-items: center; /* Centrer verticalement */
+            gap: 0.5em; /* Espacement interne */
+            transition: background-color 0.3s; /* Transition pour le changement de couleur de fond */
+        }
+
+        /* Changement de couleur de fond au survol */
+        #create-profile:hover {
+            background-color: #de1e7e; /* Couleur de fond au survol */
+        }
+
+        /* Style de la section de présentation */
+        .presentation {
+            margin-top: 200px; /* Marge en haut pour descendre la section */
+            text-align: center; /* Centrer le texte */
+            padding: 1em; /* Padding interne */
+            font-size: 1.4em; /* Augmenter la taille de police pour une meilleure visibilité */
+            color: #343a40; /* Couleur du texte */
+        }
+
+        /* Style de la scène 3D */
+        .scene {
+            width: 300px; /* Largeur de la scène */
+            height: 300px; /* Hauteur de la scène */
+            margin: 15em auto; /* Marge pour abaisser l'animation */
+            perspective: 1000px; /* Perspective 3D */
+        }
+
+        /* Style du prisme */
+        .prism {
+            width: 100%; /* Largeur du prisme */
+            height: 100%; /* Hauteur du prisme */
+            position: relative; /* Positionnement relatif */
+            transform-style: preserve-3d; /* Préserver les transformations 3D */
+            transform: rotateY(0deg); /* Rotation initiale */
+            animation: rotatePrism 10s infinite linear; /* Animation de rotation */
+        }
+
+        /* Animation de rotation */
+        @keyframes rotatePrism {
+            from {
+                transform: rotateY(0deg); /* Début de l'animation */
+            }
+            to {
+                transform: rotateY(360deg); /* Fin de l'animation */
+            }
+        }
+
+        /* Style des faces du prisme */
+        .face {
+            position: absolute; /* Positionnement absolu */
+            width: 300px; /* Largeur des faces */
+            height: 300px; /* Hauteur des faces */
+            background: linear-gradient(to bottom right, #ff6f61, #de1e7e); /* Dégradé de fond */
+            opacity: 0.9; /* Opacité des faces */
+            display: flex; /* Utiliser flexbox */
+            align-items: center; /* Centrer verticalement */
+            justify-content: center; /* Centrer horizontalement */
+            font-size: 1.5em; /* Taille de police */
+            color: white; /* Couleur du texte */
+            backface-visibility: hidden; /* Masquer l'arrière des faces */
+            border-radius: 10px; /* Bords arrondis */
+        }
+
+        /* Style de la face "Excellence" */
+        .face.excellence {
+            background: linear-gradient(to bottom right, #3cb371, #2e8b57); /* Dégradé vert */
+            transform: rotateY(0deg) translateZ(150px); /* Transformation 3D */
+        }
+
+        /* Style de la face "Faire Attention" */
+        .face.attention {
+            background: linear-gradient(to bottom right, #ffd700, #ff8c00); /* Dégradé jaune */
+            transform: rotateY(120deg) translateZ(150px); /* Transformation 3D */
+        }
+
+        /* Style de la face "Éviter à tout prix" */
+        .face.avoid {
+            background: linear-gradient(to bottom right, #ff4500, #dc143c); /* Dégradé rouge */
+            transform: rotateY(240deg) translateZ(150px); /* Transformation 3D */
+        }
+
+        /* Style du footer */
+        footer {
+            width: 100%; /* Occuper toute la largeur */
+            background-color: #1e1e1e; /* Couleur de fond */
+            color: white; /* Couleur du texte */
+            text-align: center; /* Centrer le texte */
+            padding: 1.5em 0; /* Padding interne */
+            position: absolute; /* Positionnement absolu */
+            bottom: 0; /* Aligné en bas */
+            z-index: 100; /* Toujours devant les autres éléments */
+            display: flex; /* Utiliser flexbox */
+            flex-direction: column; /* Aligner les éléments en colonne */
+            align-items: center; /* Centrer les éléments horizontalement */
+        }
+
+        /* Style de la navigation dans le footer */
+        footer nav {
+            margin-bottom: 0.5em; /* Marge en bas */
+        }
+
+        /* Style des listes de navigation dans le footer */
+        footer nav ul {
+            list-style-type: none; /* Supprimer les puces des listes */
+            padding: 0; /* Supprimer les padding */
+            margin: 0; /* Supprimer les marges */
+            display: flex; /* Utiliser flexbox */
+            gap: 2em; /* Espacement entre les éléments */
+        }
+
+        /* Style des liens de navigation dans le footer */
+        footer nav ul li a {
+            color: white; /* Couleur des liens */
+            text-decoration: none; /* Supprimer la décoration des liens */
+            font-size: 1.2em; /* Taille de police des liens */
+            transition: color 0.3s; /* Transition pour le changement de couleur */
+        }
+
+        /* Changement de couleur au survol dans le footer */
+        footer nav ul li a:hover {
+            color: #f15bb5; /* Couleur des liens au survol */
+        }
+
+        /* Style de la popup de création de profil */
+        #profile-popup {
+            display: none; /* Cacher par défaut */
+            position: fixed; /* Positionnement fixe */
+            top: 50%; /* Centrer verticalement */
+            left: 50%; /* Centrer horizontalement */
+            transform: translate(-50%, -50%); /* Centrer exactement */
+            width: 300px; /* Largeur de la popup */
+            padding: 2em; /* Padding interne */
+            background-color: white; /* Couleur de fond */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); /* Ombre de la boîte */
+            border-radius: 10px; /* Bords arrondis */
+            z-index: 1000; /* Toujours devant les autres éléments */
+        }
+
+        /* Style du titre de la popup */
+        #profile-popup h2 {
+            margin-top: 0; /* Supprimer la marge en haut */
+        }
+
+        /* Style des champs de saisie dans la popup */
+        #profile-popup input {
+            width: 100%; /* Largeur des champs */
+            padding: 0.5em; /* Padding interne */
+            margin: 0.5em 0; /* Marges autour des champs */
+            border: 1px solid #ccc; /* Bordure des champs */
+            border-radius: 5px; /* Bords arrondis */
+        }
+
+        /* Style du bouton de la popup */
+        #profile-popup button {
+            width: 100%; /* Largeur du bouton */
+            padding: 0.5em; /* Padding interne */
+            background-color: #f15bb5; /* Couleur de fond */
+            color: white; /* Couleur du texte */
+            border: none; /* Supprimer la bordure */
+            border-radius: 5px; /* Bords arrondis */
+            cursor: pointer; /* Curseur de la souris */
+        }
+
+        /* Style de l'overlay */
+        #overlay {
+            display: none; /* Cacher par défaut */
+            position: fixed; /* Positionnement fixe */
+            top: 0; /* Aligner en haut */
+            left: 0; /* Aligner à gauche */
+            width: 100%; /* Occuper toute la largeur */
+            height: 100%; /* Occuper toute la hauteur */
+            background: rgba(0, 0, 0, 0.5); /* Couleur de fond semi-transparente */
+            z-index: 500; /* Toujours devant les autres éléments */
+        }
+    </style>
+</head>
+<body>
+    <!-- Barre de menu en haut -->
+    <header>
+        <!-- Image à gauche -->
+        <img src="./images/qualiteExcellence3.webp" alt="Image Gauche">
+        <!-- Navigation principale -->
+        <nav>
+            <ul>
+                <li><a href="#welcome">Accueil</a></li>
+                <li><a href="#">SAAQ</a></li>
+                <li><a href="#">CSST</a></li>
+                <li><a href="#">Infirmière</a></li>
+                <li><a href="#">Psychologue</a></li>
+                <li><a href="#">Pharmacien</a></li>
+                <li><a href="#">Dentiste</a></li>
+                <li><a href="#">Éducation</a></li>
+            </ul>
+        </nav>
+        <!-- Bouton de création de profil -->
+        <a href="#" id="create-profile"><span>+</span> Création d'un nouveau profil</a>
+        <!-- Image à droite -->
+        <img src="./images/qualiteExcellence1.webp" alt="Image Droite">
+    </header>
+
+    <!-- Section de présentation avec id pour l'ancre -->
+    <div class="presentation" id="welcome">
+        <p>Bienvenue sur notre site web d'alerte. Ici, vous trouverez des informations importantes sur divers secteurs et des conseils pour vous aider à prendre les meilleures décisions.</p>
+    </div>
+
+    <!-- Scène 3D contenant le prisme -->
+    <div class="scene">
+        <div class="prism">
+            <!-- Face Excellence -->
+            <div class="face excellence">Excellence</div>
+            <!-- Face Attention -->
+            <div class="face attention">Faire Attention</div>
+            <!-- Face Éviter à tout prix -->
+            <div class="face avoid">Éviter à tout prix</div>
+        </div>
+    </div>
+
+    <!-- Overlay pour la popup -->
+    <div id="overlay"></div>
+
+    <!-- Popup de création de profil -->
+    <div id="profile-popup">
+        <h2>Nouveau Profil</h2>
+        <input type="text" placeholder="Nom">
+        <input type="email" placeholder="Email">
+        <button>Créer</button>
+    </div>
+
+    <!-- Footer contenant la navigation supplémentaire -->
+    <footer>
+        <nav>
+            <ul>
+                <li><a href="#">Avis</a></li>
+                <li><a href="#">Contact</a></li>
+                <li><a href="#">Politique de confidentialité</a></li>
+                <li><a href="#">Termes et conditions</a></li>
+                <li><a href="#">FAQ</a></li>
+            </ul>
+        </nav>
+        <p>&copy; 2024 Tous droits réservés. <br> Page d'Alerte Artistique</p>
+    </footer>
+
+    <!-- Script pour gérer l'affichage de la popup -->
+    <script>
+        // Ajouter un écouteur d'événement au clic sur le bouton de création de profil
+        document.getElementById('create-profile').addEventListener('click', function() {
+            // Afficher l'overlay
+            document.getElementById('overlay').style.display = 'block';
+            // Afficher la popup de création de profil
+            document.getElementById('profile-popup').style.display = 'block';
+        });
+
+        // Ajouter un écouteur d'événement au clic sur l'overlay
+        document.getElementById('overlay').addEventListener('click', function() {
+            // Masquer l'overlay
+            document.getElementById('overlay').style.display = 'none';
+            // Masquer la popup de création de profil
+            document.getElementById('profile-popup').style.display = 'none';
+        });
+    </script>
+</body>
+</html>
